@@ -5,6 +5,11 @@ description = "Add your description here"
 readme = "README.md"
 requires-python = ">=3.12"
 dependencies = [
+    "agno>=1.5.1",
+    "chroma-hnswlib",
+    "crewai-tools",
+    "groq>=0.25.0",
     "langgraph>=0.4.3",
     "psycopg2>=2.9.10",
+    "wikipedia>=1.4.0",
 ]
