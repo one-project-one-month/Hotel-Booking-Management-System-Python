@@ -9,6 +9,7 @@ dependencies = [
     "chroma-hnswlib",
     "crewai-tools",
     "groq>=0.25.0",
+    "langchain-groq>=0.3.2",
     "langgraph>=0.4.3",
     "psycopg2>=2.9.10",
     "wikipedia>=1.4.0",
