@@ -8,6 +8,7 @@ from fastapi import FastAPI
 import uvicorn
 from pydantic import BaseModel
 from langchain_core.prompts import ChatPromptTemplate
+from langgraph.checkpoint.memory import MemorySaver
 
 load_dotenv()
 
@@ -53,7 +54,11 @@ DO NOT mention about the database.
     top_k=5,
 )
 
-agent_executor = create_react_agent(model, tools, prompt=system_message)
+memory = MemorySaver()
+
+agent_executor = create_react_agent(model, tools, prompt=system_message, checkpointer=memory)
+
+config = {"configurable": {"thread_id": "user123"}}
 
 prompt_template = ChatPromptTemplate.from_messages([
     ("system", 
@@ -77,7 +82,7 @@ class InputQuery(BaseModel):
 
 @app.post("/generate")
 def generate(input: InputQuery):
-    result = agent_executor.invoke({"messages": ("user", input.query)})
+    result = agent_executor.invoke({"messages": ("user", input.query)},config)
     output_ = chain.invoke(result['messages'][-1].content)
     return output_.content
 
