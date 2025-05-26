@@ -7,6 +7,7 @@ from langgraph.prebuilt import create_react_agent
 from fastapi import FastAPI
 import uvicorn
 from pydantic import BaseModel
+from langchain_core.prompts import ChatPromptTemplate
 
 load_dotenv()
 
@@ -14,7 +15,9 @@ os.environ["LANGCHAIN_TRACING_V2"] = "true"
 os.environ["LANGCHAIN_API_KEY"] = os.getenv("LANGCHAIN_API_KEY")
 model = ChatGroq(model_name="llama-3.3-70b-versatile")
 
-db = SQLDatabase.from_uri("postgresql://postgres:09404996869Ye@localhost:2003/postgres")
+db = SQLDatabase.from_uri(
+    "postgresql://postgres.ikgsvzewbhdgyfiowijx:e56IUx3IIOA8R1I6@aws-0-us-east-1.pooler.supabase.com:6543/postgres?sslmode=require"
+)
 #print(db.dialect) -> postgresql
 
 
@@ -52,6 +55,19 @@ DO NOT mention about the database.
 
 agent_executor = create_react_agent(model, tools, prompt=system_message)
 
+prompt_template = ChatPromptTemplate.from_messages([
+    ("system", 
+     "You are a helpful, friendly assistant who responds naturally and clearly. "
+     "You adapt your tone to the user's input: summarize lists, provide explanations, or fulfill requests. "
+     "Avoid sounding robotic or overly formal. Use plain language. "
+     "**Do not ask any follow-up questions.** "
+     "Just provide the most relevant, human-like response to the user's input."),
+    
+    ("human", "{input}")
+])
+
+chain = prompt_template | model
+
 #-----------------------------------------
 
 app = FastAPI()
@@ -62,7 +78,8 @@ class InputQuery(BaseModel):
 @app.post("/generate")
 def generate(input: InputQuery):
     result = agent_executor.invoke({"messages": ("user", input.query)})
-    return result['messages'][-1].content
+    output_ = chain.invoke(result['messages'][-1].content)
+    return output_.content
 
 if __name__ == "__main__":
     uvicorn.run(app, host='localhost', port=8000)
