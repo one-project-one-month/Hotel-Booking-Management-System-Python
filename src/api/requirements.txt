@@ -2,3 +2,4 @@ langchain_groq
 fastapi
 uvicorn
 pydantic
+python-dotenv
