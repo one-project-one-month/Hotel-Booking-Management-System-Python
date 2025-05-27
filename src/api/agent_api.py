@@ -14,11 +14,10 @@ load_dotenv()
 
 os.environ["LANGCHAIN_TRACING_V2"] = "true"
 os.environ["LANGCHAIN_API_KEY"] = os.getenv("LANGCHAIN_API_KEY")
+db_uri = os.getenv("DATABASE_URL")
 model = ChatGroq(model_name="llama-3.3-70b-versatile")
 
-db = SQLDatabase.from_uri(
-    "postgresql://postgres.ikgsvzewbhdgyfiowijx:e56IUx3IIOA8R1I6@aws-0-us-east-1.pooler.supabase.com:6543/postgres?sslmode=require"
-)
+db = SQLDatabase.from_uri(db_uri)
 #print(db.dialect) -> postgresql
 
 
