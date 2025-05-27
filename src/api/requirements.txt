@@ -4,3 +4,5 @@ uvicorn
 pydantic
 python-dotenv
 langchain_community
+langgraph
+langchain_core
