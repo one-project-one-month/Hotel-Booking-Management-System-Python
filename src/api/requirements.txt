@@ -6,3 +6,4 @@ python-dotenv
 langchain_community
 langgraph
 langchain_core
+psycopg2
