@@ -9,6 +9,7 @@ import uvicorn
 from pydantic import BaseModel
 from langchain_core.prompts import ChatPromptTemplate
 from langgraph.checkpoint.memory import MemorySaver
+from fastapi.middleware.cors import CORSMiddleware
 
 load_dotenv()
 
@@ -75,6 +76,14 @@ chain = prompt_template | model
 #-----------------------------------------
 
 app = FastAPI()
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["http://localhost:5173"],
+    allow_credentials=True,
+    allow_methods=["*"], 
+    allow_headers=["*"],  
+)
 
 class InputQuery(BaseModel):
     query: str
