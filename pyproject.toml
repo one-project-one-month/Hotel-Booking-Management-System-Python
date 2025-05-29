@@ -1,0 +1,15 @@
+[project]
+name = "hotel-booking-management-system-python"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "agno>=1.5.1",
+    "chroma-hnswlib",
+    "crewai-tools",
+    "groq>=0.25.0",
+    "langchain-groq>=0.3.2",
+    "langgraph>=0.4.3",
+    "psycopg2>=2.9.10",
+]
