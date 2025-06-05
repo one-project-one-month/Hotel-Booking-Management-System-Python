@@ -75,7 +75,7 @@ prompt_template = ChatPromptTemplate.from_messages([
 
 chain = prompt_template | model
 
-#-----------------------------------------
+#----------------------------------------
 
 app = FastAPI()
 
