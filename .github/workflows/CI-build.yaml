@@ -1,0 +1,39 @@
+name: Application Build Pipeline
+
+on:
+  pull_request:
+    branches:
+      - main
+      - develop
+  push:
+    branches:
+      - develop/*
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up the OS Dependency
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: python my_script.py
+      - name: Install dependencies
+        #Ensure pip is up to date
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      #for catch the syntax , variable errors
+      - name: Lint with flake8
+        run: |
+          pip install flake8
+          flake8 src/api --count --select=E9,F63,F7,F82 --show-source --statistics
+
+      - name: Run FastAPI app with Uvicorn
+        working-directory: src/api
+        run: |
+          uvicorn agent_api:app --reload
