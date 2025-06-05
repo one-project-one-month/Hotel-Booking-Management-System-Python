@@ -14,9 +14,15 @@ from fastapi.middleware.cors import CORSMiddleware
 load_dotenv()
 
 os.environ["LANGCHAIN_TRACING_V2"] = "true"
-os.environ["LANGCHAIN_API_KEY"] = os.getenv("LANGCHAIN_API_KEY") # type: ignore
+langchain_key = os.getenv("LANGCHAIN_API_KEY")# type: ignore
+if not langchain_key:
+    raise ValueError("LANGCHAIN_API_KEY environment variable is not set.")
+
+os.environ["LANGCHAIN_API_KEY"] = langchain_key
+
 db_uri = os.getenv("DATABASE_URL")
 model = ChatGroq(model_name="llama-3.3-70b-versatile") # type: ignore
+
 
 if db_uri is None:
     raise ValueError("DATABASE_URL environment variable is not set.")
@@ -75,7 +81,7 @@ prompt_template = ChatPromptTemplate.from_messages([
 
 chain = prompt_template | model
 
-#----------------------------------------
+#-----------------------------------------
 
 app = FastAPI()
 
