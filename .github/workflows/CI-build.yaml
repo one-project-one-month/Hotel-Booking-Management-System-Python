@@ -1,15 +1,17 @@
 name: Application Build Pipeline
 
 on:
+  push:
+    branches:
+      - dev
+      - main
+      - dev-*
+      - dev/*
+  workflow_dispatch:
   pull_request:
     branches:
       - main
-      - develop
-  push:
-    branches:
-      - develop
-      - main
-      - develop/*
+      - dev
 
 jobs:
   build:
@@ -22,7 +24,7 @@ jobs:
         uses: actions/setup-python@v5
         with:
           python-version: "3.12"
-      - run: python my_script.py
+
       - name: Install dependencies
         #Ensure pip is up to date
         run: |
