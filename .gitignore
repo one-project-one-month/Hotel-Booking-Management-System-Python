@@ -25,6 +25,6 @@ dist/
 Thumbs.db
 
 # Ignore environment variable files
-.env
+#.env
 uv.lock
 .python-version
