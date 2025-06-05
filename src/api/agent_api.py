@@ -14,10 +14,12 @@ from fastapi.middleware.cors import CORSMiddleware
 load_dotenv()
 
 os.environ["LANGCHAIN_TRACING_V2"] = "true"
-os.environ["LANGCHAIN_API_KEY"] = os.getenv("LANGCHAIN_API_KEY")
+os.environ["LANGCHAIN_API_KEY"] = os.getenv("LANGCHAIN_API_KEY") # type: ignore
 db_uri = os.getenv("DATABASE_URL")
-model = ChatGroq(model_name="llama-3.3-70b-versatile")
+model = ChatGroq(model_name="llama-3.3-70b-versatile") # type: ignore
 
+if db_uri is None:
+    raise ValueError("DATABASE_URL environment variable is not set.")
 db = SQLDatabase.from_uri(db_uri)
 #print(db.dialect) -> postgresql
 
@@ -90,7 +92,7 @@ class InputQuery(BaseModel):
 
 @app.post("/generate")
 def generate(input: InputQuery):
-    result = agent_executor.invoke({"messages": ("user", input.query)},config)
+    result = agent_executor.invoke({"messages": ("user", input.query)},config) # type: ignore
     output_ = chain.invoke(result['messages'][-1].content)
     return output_.content
 
