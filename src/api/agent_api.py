@@ -14,7 +14,9 @@ from fastapi.middleware.cors import CORSMiddleware
 load_dotenv()
 
 os.environ["LANGCHAIN_TRACING_V2"] = "true"
+
 langchain_key = os.getenv("LANGCHAIN_API_KEY")# type: ignore
+
 if not langchain_key:
     raise ValueError("LANGCHAIN_API_KEY environment variable is not set.")
 
