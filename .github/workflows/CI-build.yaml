@@ -16,6 +16,21 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+
+    services:
+      postgres:
+        image: postgres:latest
+        ports:
+          - 5432:5432
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: mydatabase
+        options: >-
+          --health-cmd pg_isready 
+          --health-interval 10s 
+          --health-timeout 5s
+          --health-retries 5
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -25,13 +40,19 @@ jobs:
         with:
           python-version: "3.12"
 
+      - name: Cache pip dependencies
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/pip
+          key: ${{github.sha}}-pip-cache
+
       - name: Install dependencies
         #Ensure pip is up to date
         run: |
           python -m pip install --upgrade pip
           pip install -r src/api/requirements.txt
 
-      #for catch the syntax , variable errors
+      #for catch the syntax , code style and linting errors
       - name: Lint with flake8
         run: |
           pip install flake8
