@@ -75,7 +75,7 @@ DATABASE_URL --> The connection string for your PostgreSQL database. Used by the
 
 ```bash
 cd src/api
-uvicorn agent_api:app --reload
+uvicorn agent_api:app --reload --timeout-keep-alive 20
 ```
 
 This will launch the FastAPI backend. You can test it by sending a POST request to `http://127.0.0.1:8000/generate` using Postman, curl.
